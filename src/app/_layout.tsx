@@ -1,18 +1,47 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
+import '../global.css';
+
+import { useFonts } from 'expo-font';
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useColorScheme } from 'react-native';
+import { SQLiteProvider } from 'expo-sqlite';
+import { Suspense, useEffect } from 'react';
+import { StatusBar, Text, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { AppearanceProvider, useAppearancePreference } from '@/components/appearance';
+import { TapSoundProvider } from '@/components/tap-sound';
+import { migrateDb } from '@/db/schema';
+import { appFonts } from '@/utils/font-assets';
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
+void SplashScreen.preventAutoHideAsync().catch(() => {});
 
-SplashScreen.preventAutoHideAsync();
+function Navigator() {
+  const { dark } = useAppearancePreference();
+  useEffect(() => { void SplashScreen.hideAsync().catch(() => {}); }, []);
+  return <ThemeProvider value={dark ? DarkTheme : DefaultTheme}>
+    <StatusBar barStyle="light-content" />
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="expense" options={{ presentation: 'modal' }} />
+    </Stack>
+  </ThemeProvider>;
+}
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
-    </ThemeProvider>
-  );
+export function ErrorBoundary({ retry }: { retry: () => void }) {
+  useEffect(() => { void SplashScreen.hideAsync().catch(() => {}); }, []);
+  return <View className="flex-1 items-center justify-center gap-4 p-6">
+    <Text className="font-sans">Spend Pocket could not open its local database.</Text>
+    <Text accessibilityRole="button" onPress={retry} className="font-sans p-4">Retry</Text>
+  </View>;
+}
+
+export default function RootLayout() {
+  const [loaded, error] = useFonts(appFonts);
+  if (!loaded && !error) return null;
+  return <GestureHandlerRootView style={{ flex: 1 }}>
+    <Suspense fallback={<View style={{ flex: 1, backgroundColor: '#f3f5f4' }} />}>
+      <SQLiteProvider databaseName="spendpocket.db" onInit={migrateDb} useSuspense>
+        <AppearanceProvider><TapSoundProvider><Navigator /></TapSoundProvider></AppearanceProvider>
+      </SQLiteProvider>
+    </Suspense>
+  </GestureHandlerRootView>;
 }

@@ -1,56 +1,61 @@
-# Welcome to your Expo app 👋
+# Spend Pocket
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Spend Pocket is an offline-first personal expense tracker built with Expo and React Native. Log what you spend, see where your money goes, and export an itemized receipt for any day or month.
 
-## Get started
+The app uses PHP (₱) and stores expenses and preferences locally with SQLite. It runs without an app account or a separate backend.
 
-1. Install dependencies
+## Features
 
-   ```bash
-   npm install
-   ```
+- **Today** shows daily spending, weekly activity, and quick-add suggestions for frequent expenses.
+- **History** has a spending heatmap, daily totals, and expense editing and deletion with Undo.
+- **Summary** includes an interactive category chart, daily spending bars, and a filterable expense list.
+- **Budgets** tracks monthly and category limits with progress indicators.
+- **Receipts and exports** include paper-style previews, daily and monthly PDF receipts with itemized expenses and totals, and CSV export.
+- **Personalization** includes editable category icons, light and dark themes, and optional tap and spending sounds.
 
-2. Start the app
+## Try it locally
 
-   ```bash
-   npx expo start
-   ```
+Use Node.js 22.13 or newer. From the repository root, run:
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```sh
+npm ci
+npx expo start --web --port 8092
 ```
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+Open [Spend Pocket locally](http://localhost:8092) in Chrome or Edge. Use the same browser profile and port to keep access to your entries. Try logging a Food expense, opening its receipt from History, and checking the category total in Summary.
 
-### Other setup steps
+For a phone preview, run `npx expo start` and scan the QR code with an Expo Go version that supports SDK 58. You can also use a compatible development build.
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+## Portfolio demo
 
-## Learn more
+A production web demo has been built and tested locally at three phone widths. The public link is pending deployment.
 
-To learn more about developing your project with Expo, look at the following resources:
+## Tech stack
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- Expo SDK 58, React Native, React Native Web, and TypeScript
+- Expo Router for navigation and Expo SQLite for local storage
+- NativeWind for styling, Roboto and Noto Serif for typography, and jsPDF for receipts
 
-## Join the community
+## Development checks
 
-Join our community of developers creating universal apps.
+```sh
+npm run lint
+npx tsc --noEmit
+node --test scripts/spend-pocket.test.cjs
+npx expo export --platform android --platform ios
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+The database tests cover migrations, expense operations, budgets, and reporting. The final command checks that Expo can bundle JavaScript and assets for both mobile platforms. If Metro reports missing files in a OneDrive checkout, try running the export from a fresh copy outside the synced folder.
+
+## Build for Android and iPhone
+
+Link the project to your Expo account, then use the internal preview profile to create installable test builds. The Android preview profile produces an APK. An iPhone preview build requires Apple signing credentials and a registered test device.
+
+```sh
+npx eas-cli@latest build:configure
+npx eas-cli@latest build --profile preview --platform all
+```
+
+Android expense entry, offline persistence, and PDF sharing were verified in Expo Go on an emulator. Standalone Android and signed iPhone builds still need physical-phone testing. On each phone, confirm that an expense saved in airplane mode survives a restart, the keypad and note field are usable, daily and monthly receipts can be shared, and the sound toggle works.
+
+After phone testing, use `npx eas-cli@latest build --profile production --platform all` for production builds. Confirm the `com.spendpocket.app` identifier in your developer accounts before store submission.
