@@ -1,5 +1,9 @@
 # Spend Pocket
 
+[![Download Android APK](https://img.shields.io/badge/Download-Android_APK-135540?style=for-the-badge&logo=android&logoColor=white)](https://github.com/IvyMaeAguila/SpendPocket/releases/download/v1.0.0-preview.1/Spend-Pocket-1.0.0-Android.apk)
+
+Android preview · Version 1.0.0 · For 64-bit Android phones running Android 7 or newer. Download the APK on your phone, open it, and allow installation from your browser when prompted.
+
 Spend Pocket is an offline-first personal expense tracker built with Expo and React Native. Log what you spend, see where your money goes, and export an itemized receipt for any day or month.
 
 The app uses PHP (₱) and stores expenses and preferences locally with SQLite. It runs without an app account or a separate backend.
