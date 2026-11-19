@@ -12,9 +12,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#135540",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "backgroundColor": "#fafcf7",
+        "foregroundImage": "./assets/images/icon.png"
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.spendpocket.app"
@@ -28,9 +27,9 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#135540",
+          "backgroundColor": "#fafcf7",
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 108
+          "imageWidth": 220
         }
       ],
       "expo-sqlite",

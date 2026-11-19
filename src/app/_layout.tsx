@@ -8,6 +8,7 @@ import { Suspense, useEffect } from 'react';
 import { StatusBar, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { AppearanceProvider, useAppearancePreference } from '@/components/appearance';
+import { LaunchScreen } from '@/components/launch-screen';
 import { TapSoundProvider } from '@/components/tap-sound';
 import { migrateDb } from '@/db/schema';
 import { appFonts } from '@/utils/font-assets';
@@ -16,13 +17,13 @@ void SplashScreen.preventAutoHideAsync().catch(() => {});
 
 function Navigator() {
   const { dark } = useAppearancePreference();
-  useEffect(() => { void SplashScreen.hideAsync().catch(() => {}); }, []);
   return <ThemeProvider value={dark ? DarkTheme : DefaultTheme}>
     <StatusBar barStyle="light-content" />
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(tabs)" />
       <Stack.Screen name="expense" options={{ presentation: 'modal' }} />
     </Stack>
+    <LaunchScreen />
   </ThemeProvider>;
 }
 
